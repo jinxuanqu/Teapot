@@ -1,0 +1,13 @@
+Project : Teapot
+
+Author : Shengying Liu & Jinxuan Qu
+
+Features : 
+1. Texture-mapping
+2. Shadow-mapping
+3. normal-mapping
+4. environment-mapping
+5. multi-texturing
+
+How to run : 
+type "make" to compile,type "./teapot" to run.

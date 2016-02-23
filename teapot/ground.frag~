@@ -1,0 +1,28 @@
+uniform sampler2D shadowtexture;
+varying vec3 ec_vnormal, ec_vposition;
+varying vec4 tcoords;
+
+void main()
+{
+vec3 P, N, L, V, H;
+vec4 pccoords;
+vec4 diffuse_color = gl_FrontMaterial.diffuse; 
+vec4 specular_color = gl_FrontMaterial.specular; 
+float shininess = gl_FrontMaterial.shininess;
+float depthsample, clarity;
+
+P = ec_vposition;
+N = normalize(ec_vnormal);
+L = normalize(gl_LightSource[0].position - P);
+V = normalize(-P);				// eye position is (0,0,0)!
+H = normalize(L+V);
+		
+pccoords = tcoords/tcoords.w ;
+depthsample = texture2D(shadowtexture,pccoords.st).z;
+clarity = 1.0;
+// Simulated z is larger than value is saved depth map; point was in shadow.
+if(depthsample < pccoords.z) clarity = 0.5;
+diffuse_color *= clarity*max(dot(N,L),0.0);
+specular_color *= clarity*pow(max(dot(H,N),0.0),shininess);
+gl_FragColor = 0.5*(diffuse_color + specular_color);
+}
